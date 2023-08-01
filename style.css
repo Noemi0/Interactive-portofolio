@@ -1,0 +1,33 @@
+body{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+#canvas{
+    display: block;
+    position: relative;
+    z-index: -1;
+    background: url("img/space.jpg");
+    background-size: cover;
+}
+.hide{
+    display: none;
+}
+.container{
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+.first{
+    height:600px;
+}
+
+p,h1,h2{
+    color:wheat;
+}
+.overlay{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+}

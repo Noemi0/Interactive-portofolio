@@ -104,7 +104,7 @@ const images = [
 const flagImages =[
     'img/flag1.png',
     'img/flag2.png',
-    'img/flag1.png',
+    'img/flag3.png',
     'img/flag1.png',
     'img/flag1.png',
     'img/flag1.png',

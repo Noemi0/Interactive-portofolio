@@ -345,5 +345,37 @@ window.addEventListener('keydown', (event) => {
 });
 
  
-  animate();
+let isLoaded = false;
+let k = 1;          
+
+const loadDiv = document.querySelector(".loading-screen");
+
+let isItStarted = false;
+
+
+function myLoop() {     
+  setTimeout(function() {  
+    if (document.readyState === "complete") {
+        isLoaded = true;
+        loadDiv.style.display='none';
+        animate();
+        window.addEventListener('load',(e)=>{
+            setTimeout(function(){
+                isItStarted = true;
+            }, 2000);    
+        },{once:true})
+    } 
+    k++;
+    if(isLoaded){
+        return;
+    }               
+    if (k < 10) {       
+      myLoop();            
+    }                      
+  }, 2000)
+}
+
+myLoop(); 
+
+
   

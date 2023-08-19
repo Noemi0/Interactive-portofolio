@@ -1,0 +1,119 @@
+body{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+    
+}
+
+#canvas{
+    display: block;
+    position: relative;
+    z-index: -1;
+    background: url("img/space.jpg");
+    background-size: cover;
+}
+.hide{
+    display: none !important;
+}
+.container{
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+h1{
+    color:wheat;
+    text-align: center;
+    font-family: monospace;
+    position: relative;
+    animation: slideIn 1s ease-in-out;
+    line-height: 1.4;
+    
+}
+
+h2{
+    color:wheat;
+    text-align: center;
+    font-family: monospace;
+    position: relative;
+    font-size: xx-large!important;
+    
+}
+
+
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+p{
+    color: black;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+.overlay{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+}
+
+.wrapper {
+	display: flex;
+    position: absolute;
+}
+
+
+.stick {
+	height: 300px;
+	width: 8px;
+	background: rgb(109, 109, 109);
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.flag {
+	width: 270px;
+	height: 180px;
+	box-shadow: 0px 0px 90px 1px rgb(31, 31, 31);
+	background-color: white;
+	position: relative;
+    text-align: center;
+    line-height: 1.5;
+    
+}
+
+.refresh{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    ;    
+}
+
+#refreshButton{
+background-color: #7A8495;
+border-radius: 15px;
+border-color:transparent;
+margin-top: 10px;
+font-size: 50px;
+}
+
+#refreshButton:hover{
+    background-color: #646d7c;
+    border-radius: 15px;
+    border-color:transparent;
+    margin-top: 10px;
+    font-size: 50px;
+    }
+
+

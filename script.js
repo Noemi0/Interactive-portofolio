@@ -1,15 +1,16 @@
 const canvas = document.getElementById('canvas');
-canvas.width = window.outerWidth;
-canvas.height = window.outerHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
 
 class Rocket {
     constructor(x, y) {
-      this.width = 200;
-      this.height = 200;
+      this.width = canvas.width * 0.2;
+      this.height = canvas.width * 0.2;
       this.x = x;
       this.y = y;
       this.loadRocketImage(this.state);
+
     }
   
     loadRocketImage(state) {
@@ -34,17 +35,26 @@ class Rocket {
 
     }
     setInFocus(){
-        this.x = 300;
-        // this.y = canvas.height/2 + 50;
+        this.x = canvas.width/2 -600;
+        this.y = canvas.height/2 - 100;
+        if(currentPlanetIndex ==3){
+            this.x = canvas.width/2-450;
+            this.y = canvas.height/2-200;
+        }
         this.width = 400;
         this.height = 400;
     }
     setBackFocus(){ 
         this.x = 100;
-        // this.y = canvas.height/2 + 50;
+        this.y = canvas.height/2 + 50;
         this.width = 200;
         this.height = 200;
     }
+    goByeBye(){
+        this.x += 10;
+    }
+   
+    
   }
   
 
@@ -63,8 +73,8 @@ const images = [
   
   class Planet {
     constructor(x, y, imageSrc) {
-      this.width = 300;
-      this.height = 300;
+      this.width = canvas.width*0.15;
+      this.height = canvas.height*0.3;
       
       this.x = x;
       this.y = y;
@@ -77,11 +87,14 @@ const images = [
     }
   
     drawPlanet() {
-      ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        if(!isEnded){
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        }
+
     }
   
     updatePosition(rocketX, rocketY) {
-      const speed = 4;
+      const speed = 5;
       this.x -= speed;
     }
 
@@ -89,51 +102,46 @@ const images = [
         this.width = canvas.width;
         this.height = canvas.height;
         this.initialY=this.y;
-        this.y = canvas.height /1.5;
+        this.y = canvas.height /1.7;
         this.initialX=this.x;
+        if(currentPlanetIndex==3){
+            this.y=canvas.height/2;
+            this.x=100; 
+        }
         this.x = 0
     }
     setBackFocus(){
         this.x = this.initialX;
         this.y = this.initialY;
-        this.width = 300;
-        this.height = 300;
+        this.width = canvas.width*0.15;
+        this.height = canvas.height*0.3;
     }
   }
 
-const flagImages =[
-    'img/flag1.png',
-    'img/flag2.png',
-    'img/flag3.png',
-    'img/flag1.png',
-    'img/flag1.png',
-    'img/flag1.png',
-    'img/flag1.png',
-    'img/flag1.png',
-    'img/flag1.png'
-]
 
 
-class Flag {
+
+class Astronaut {
 constructor(x, y, imageSrc) {
-    this.width = 400;
-    this.height = 400;
+    this.width = canvas.width*0.25;
+    this.height = canvas.width*0.25;
     this.x = x;
     this.y = y;
-    this.flagImage = new Image();
-    this.flagImage.src = imageSrc;
+    this.astronautImage = new Image();
+    this.astronautImage.src = imageSrc;
 }
 
-drawFlag() {
-    ctx.drawImage(this.flagImage, this.x, this.y, this.width, this.height);
+
+drawAstronaut() {
+    ctx.drawImage(this.astronautImage, this.x, this.y, this.width, this.height);
 }
 }
   
 
-  const rocket = new Rocket(100, canvas.height/2);
-  const planetSpacing = 400;
+  const rocket = new Rocket(canvas.width * 0.1, canvas.height/2);
+  const planetSpacing = canvas.width * 0.25;
   const planets = [];
-  const flags = [];
+  const astronauts = [];
   for (let i = 0; i < images.length; i++) {
     const planetX = canvas.width + i * planetSpacing;
     const planetY = canvas.height / 2;
@@ -141,12 +149,13 @@ drawFlag() {
    
     planets.push(planet);
   }
-
-  for (let i = 0; i < flagImages.length; i++) {
-    const flagX = 850 ;
-    const flagY = 400;
-    const flag = new Flag(flagX, flagY, flagImages[i]);
-    flags.push(flag);
+ const imageSrc="img/flag.png"
+  for (let i = 0; i < planets.length; i++) {
+    const astronautX = canvas.width/2-planets[i].width/2;
+    const astronautY = canvas.height/2-planets[i].height/1.3;
+    
+    const astronaut = new Astronaut(astronautX, astronautY, imageSrc);
+    astronauts.push(astronaut);
   }
 
   function movePlanets(planet) {
@@ -172,8 +181,8 @@ drawFlag() {
   let animationStopped = false;
   let planetOpened = false;
   let currentPLanet;
-  let currentFlag;
-
+  let currentastronaut;
+  let isEnded = false
 
   function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -192,8 +201,14 @@ drawFlag() {
       }
   }
 
+  function isEnd(){
+    if (currentPlanetIndex == planets.length && !animationStopped) {
+        isEnded = true;
+      }
+  }
 
   function animateCosmos(){
+    
     for (const planet of planets) {
         if (!animationStopped) { 
             movePlanets(planet);
@@ -205,17 +220,31 @@ drawFlag() {
         }
     }
     rocket.changeStateUp('side')
-    rocket.setBackFocus();
     currentPLanet = planets[currentPlanetIndex];
-    
 
-    rocket.drawRocket();
+    isEnd()
+
+   if(isEnded){
+        rocket.drawRocket();
+        hideEnter();
+        hideSpace();
+        showButton();
+        rocket.goByeBye()
+    }else{
+        rocket.setBackFocus();
+        rocket.drawRocket();
+        hideButton();
+    }
+
     if(animationStopped){
-        var element = document.querySelector('.enter');
-        element.classList.remove("hide");
+        showEnter();
+        showSpace();
+        hideButton();
+        hideEscape();
     }
   }
   
+
 
   function animatePlanet(){
     currentPLanet = planets[currentPlanetIndex];
@@ -224,20 +253,58 @@ drawFlag() {
     rocket.changeStateUp("up");
     rocket.setInFocus()
     rocket.drawRocket();
-    currentFlag = flags[currentPlanetIndex];
-    currentFlag.drawFlag();
- 
-      }
+    currentastronaut = astronauts[currentPlanetIndex];
+    currentastronaut.drawAstronaut();
+    }
+
+
 
 let currentPlanetIndex = 0;
 
+function showEscape(){
+    let esc = document.querySelector(".escape");
+    esc.classList.remove("hide");
+}
+
+function hideEscape(){
+    let esc = document.querySelector(".escape");
+    esc.classList.add("hide");
+}
+
+function showSpace(){
+    let spac = document.querySelector(".space");
+    spac.classList.remove("hide");
+}
+
+function hideSpace(){
+    let spac = document.querySelector(".space");
+    spac.classList.add("hide");
+}
+function showEnter(){
+    var ent = document.querySelector('.enter');
+    ent.classList.remove("hide");
+}
+
+function hideEnter(){
+    var ent = document.querySelector('.enter');
+    ent.classList.add("hide");
+}
+
+function hideButton(){
+    var but = document.querySelector('.refresh');
+    but.classList.add("hide");
+}
+function showButton(){
+    var but = document.querySelector('.refresh');
+    but.classList.remove("hide");
+}
+
+
 window.addEventListener('keydown', (event) => {
-    if (event.key === ' ' && animationStopped) {
+    if (event.key === ' ' && animationStopped && !planetOpened) {
       animationStopped = false;
   
-      if (currentPlanetIndex === planets.length - 1) {
-        currentPlanetIndex = 0; 
-      } else {
+      if (currentPlanetIndex !== planets.length )  {
         currentPlanetIndex++;
       }
       animate();
@@ -247,7 +314,17 @@ window.addEventListener('keydown', (event) => {
   window.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && animationStopped) {
       planetOpened = true;
-  
+      let tempFlag = document.querySelector(".flag-" + currentPlanetIndex);
+      let wrap = document.querySelector(".wrapper.flag-" + currentPlanetIndex);
+      flagX=(canvas.width/2)-5;
+      flagY=canvas.height/2 - 150;
+      wrap.style.left=flagX+"px";
+      wrap.style.top = flagY+"px";
+      tempFlag.classList.remove("hide")
+      hideEnter();
+      hideSpace();
+      hideButton();
+      showEscape();
       animate();
     }
   });
@@ -257,9 +334,15 @@ window.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && planetOpened) {
       planetOpened = false;
       currentPLanet.setBackFocus();
+      let tempFlag = document.querySelector(".flag-" + currentPlanetIndex)
+      tempFlag.classList.add("hide")
       animate();
     }
   });
+
+  document.getElementById("refreshButton").addEventListener("click", function() {
+    location.reload();
+});
 
  
   animate();

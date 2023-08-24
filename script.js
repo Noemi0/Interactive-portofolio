@@ -5,8 +5,8 @@ const ctx = canvas.getContext('2d');
 
 class Rocket {
     constructor(x, y) {
-      this.width = canvas.width * 0.2;
-      this.height = canvas.width * 0.2;
+      this.width = canvas.width * 0.15;
+      this.height = canvas.height * 0.3;
       this.x = x;
       this.y = y;
       this.loadRocketImage(this.state);
@@ -47,8 +47,8 @@ class Rocket {
     setBackFocus(){ 
         this.x = 100;
         this.y = canvas.height/2 + 50;
-        this.width = 200;
-        this.height = 200;
+        this.width = canvas.width * 0.15;
+        this.height = canvas.height * 0.3;
     }
     goByeBye(){
         this.x += 10;
@@ -299,6 +299,16 @@ function showButton(){
     but.classList.remove("hide");
 }
 
+function showSorry(){
+    var but = document.querySelector('.sorry');
+    but.classList.remove("hide");
+}
+
+function hideSorry(){
+    var but = document.querySelector('.sorry');
+    but.classList.add("hide");
+}
+
 
 window.addEventListener('keydown', (event) => {
     if (event.key === ' ' && animationStopped && !planetOpened) {
@@ -349,7 +359,6 @@ let isLoaded = false;
 let k = 1;          
 
 const loadDiv = document.querySelector(".loading-screen");
-
 let isItStarted = false;
 
 
@@ -358,7 +367,11 @@ function myLoop() {
     if (document.readyState === "complete") {
         isLoaded = true;
         loadDiv.style.display='none';
-        animate();
+        if(canvas.height > canvas.width){
+            showSorry();
+        }else{
+            animate();
+        }
         window.addEventListener('load',(e)=>{
             setTimeout(function(){
                 isItStarted = true;
